@@ -4,30 +4,38 @@
  */
 package com.mycompany.views.components;
 
+import java.awt.Color;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.mycompany.models.SerieElement;
+import com.mycompany.models.SerieStates;
 
 /**
  *
  * @author famar
  */
 public class SerieItem extends javax.swing.JPanel {
+    //FIXME: arreglar el como muestro el estado del link
+    
+    //TODO: añadir el uso del template para el link
     public final SerieElement serie;
+    private ExecutorService executor;
 
     /**
      * Creates new form SerieItem
      */
     public SerieItem(SerieElement serie) {
         this.serie = serie;
+        this.executor = Executors.newSingleThreadExecutor();
         initComponents();
-        
-        //TODO: hacer que cuando cambies valores en los inputs se cambien en el objeto y que añada un boton para reemplazar cambios o descartarlos
-        //FIXME: hacer que todos los elementos tengan el background del color de este componente, tengo que actualizar el bg de todos los elementos
-        
-        this.TitleField.setText(this.serie.title);
-        this.LinkField.setText(this.serie.link);
-        this.ChapterSpinner.setValue(this.serie.chapter);
-        this.SeasonSpinner.setValue(this.serie.season);
-        this.StateComboBox.setSelectedIndex(this.serie.state.value);
+        // FIXME: hacer que todos los elementos tengan el background del color de este
+        // componente, tengo que actualizar el bg de todos los elementos
+        setPropertiesOfSerieInInputs();
+        ConfirmChangesPanel.setVisible(false);
     }
 
     /**
@@ -40,89 +48,279 @@ public class SerieItem extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel2 = new javax.swing.JPanel();
+        ContainerPanel = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
         TitleField = new javax.swing.JTextField();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
         LinkField = new javax.swing.JTextField();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
         ChapterSpinner = new javax.swing.JSpinner();
+        jPanel15 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
         SeasonSpinner = new javax.swing.JSpinner();
+        jPanel16 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
         StateComboBox = new javax.swing.JComboBox<>();
-        jPanel3 = new javax.swing.JPanel();
+        ConfirmChangesPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        AcceptChanges = new javax.swing.JButton();
+        DiscardChanges = new javax.swing.JButton();
 
         setBackground(getBackground());
         setFocusCycleRoot(true);
         setFocusTraversalPolicyProvider(true);
-        setMaximumSize(new java.awt.Dimension(100000, 100000));
+        setMaximumSize(new java.awt.Dimension(800, 100));
         setMinimumSize(new java.awt.Dimension(500, 100));
         setLayout(new java.awt.CardLayout());
 
-        jSplitPane1.setBackground(getBackground());
-        jSplitPane1.setDividerLocation(25);
-        jSplitPane1.setDividerSize(1);
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        ContainerPanel.setBackground(getBackground());
+        ContainerPanel.setLayout(new javax.swing.BoxLayout(ContainerPanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        jPanel2.setBackground(getBackground());
+        jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.Y_AXIS));
 
-        TitleField.setMaximumSize(new java.awt.Dimension(300, 100));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Title");
+        jLabel8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel6.add(jLabel8);
+
+        TitleField.setMaximumSize(new java.awt.Dimension(300, 50));
         TitleField.setMinimumSize(new java.awt.Dimension(68, 100));
-        jPanel2.add(TitleField);
+        TitleField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                TitleFieldKeyTyped(evt);
+            }
+        });
+        jPanel6.add(TitleField);
 
-        LinkField.setMaximumSize(new java.awt.Dimension(300, 100));
-        jPanel2.add(LinkField);
+        ContainerPanel.add(jPanel6);
 
-        ChapterSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-        jPanel2.add(ChapterSpinner);
+        jPanel7.setLayout(new javax.swing.BoxLayout(jPanel7, javax.swing.BoxLayout.Y_AXIS));
 
-        SeasonSpinner.setModel(new javax.swing.SpinnerNumberModel());
-        jPanel2.add(SeasonSpinner);
+        jLabel9.setText("Link");
+        jPanel7.add(jLabel9);
+
+        LinkField.setMaximumSize(new java.awt.Dimension(300, 50));
+        LinkField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                LinkFieldKeyTyped(evt);
+            }
+        });
+        jPanel7.add(LinkField);
+
+        ContainerPanel.add(jPanel7);
+
+        jPanel8.setLayout(new javax.swing.BoxLayout(jPanel8, javax.swing.BoxLayout.Y_AXIS));
+
+        jLabel10.setText("Chapter");
+        jPanel8.add(jLabel10);
+
+        ChapterSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 0, null, 1));
+        ChapterSpinner.setMaximumSize(new java.awt.Dimension(300, 50));
+        ChapterSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                ChapterSpinnerStateChanged(evt);
+            }
+        });
+        jPanel8.add(ChapterSpinner);
+
+        ContainerPanel.add(jPanel8);
+
+        jPanel15.setLayout(new javax.swing.BoxLayout(jPanel15, javax.swing.BoxLayout.Y_AXIS));
+
+        jLabel11.setText("Season");
+        jPanel15.add(jLabel11);
+
+        SeasonSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 0, null, 1));
+        SeasonSpinner.setMaximumSize(new java.awt.Dimension(300, 50));
+        SeasonSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                SeasonSpinnerStateChanged(evt);
+            }
+        });
+        jPanel15.add(SeasonSpinner);
+
+        ContainerPanel.add(jPanel15);
+
+        jPanel16.setLayout(new javax.swing.BoxLayout(jPanel16, javax.swing.BoxLayout.Y_AXIS));
+
+        jLabel12.setText("State");
+        jPanel16.add(jLabel12);
 
         StateComboBox.setMaximumRowCount(3);
         StateComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pending", "see", "finalized" }));
-        jPanel2.add(StateComboBox);
+        StateComboBox.setMaximumSize(new java.awt.Dimension(300, 50));
+        StateComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                StateComboBoxItemStateChanged(evt);
+            }
+        });
+        jPanel16.add(StateComboBox);
 
-        jSplitPane1.setBottomComponent(jPanel2);
+        ContainerPanel.add(jPanel16);
 
-        jPanel3.setBackground(getBackground());
+        ConfirmChangesPanel.setMaximumSize(new java.awt.Dimension(100, 100));
+        ConfirmChangesPanel.setLayout(new java.awt.GridLayout(2, 1, 2, 5));
+        ConfirmChangesPanel.setVisible(false);
 
-        jLabel1.setText("Title");
-        jPanel3.add(jLabel1);
+        jLabel1.setText("<html><body style=\"text-align: 'center';\">Are you sure to make the changes?</body></html>");
+        ConfirmChangesPanel.add(jLabel1);
 
-        jLabel2.setText("Link");
-        jPanel3.add(jLabel2);
+        AcceptChanges.setText("✔");
+        AcceptChanges.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AcceptChangesMouseClicked(evt);
+            }
+        });
+        jPanel4.add(AcceptChanges);
 
-        jLabel3.setText("Chapter");
-        jPanel3.add(jLabel3);
+        DiscardChanges.setText("✖");
+        DiscardChanges.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DiscardChangesMouseClicked(evt);
+            }
+        });
+        jPanel4.add(DiscardChanges);
 
-        jLabel4.setText("Season");
-        jPanel3.add(jLabel4);
+        ConfirmChangesPanel.add(jPanel4);
 
-        jLabel5.setText("State");
-        jPanel3.add(jLabel5);
+        ContainerPanel.add(ConfirmChangesPanel);
 
-        jSplitPane1.setLeftComponent(jPanel3);
-
-        add(jSplitPane1, "card2");
+        add(ContainerPanel, "card3");
     }// </editor-fold>//GEN-END:initComponents
 
+    private void AcceptChangesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AcceptChangesMouseClicked
+        // TODO add your handling code here:
+        this.serie.title = TitleField.getText();
+        this.serie.link = LinkField.getText();
+        this.serie.chapter = (int) ChapterSpinner.getValue();
+        this.serie.season = (int) SeasonSpinner.getValue();
+        this.serie.state = SerieStates.values()[(StateComboBox.getSelectedIndex() == -1) ? 0
+                : StateComboBox.getSelectedIndex()];
+
+        this.serie.save();
+
+        ConfirmChangesPanel.setVisible(false);
+    }//GEN-LAST:event_AcceptChangesMouseClicked
+
+    private void DiscardChangesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DiscardChangesMouseClicked
+        // TODO add your handling code here:
+        setPropertiesOfSerieInInputs();
+        ConfirmChangesPanel.setVisible(false);
+    }//GEN-LAST:event_DiscardChangesMouseClicked
+
+    private void TitleFieldKeyTyped(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TitleFieldKeyTyped
+        // TODO add your handling code here:
+        visibleConfirmChanges();
+    }// GEN-LAST:event_TitleFieldKeyTyped
+
+    private void LinkFieldKeyTyped(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_LinkFieldKeyTyped
+        // TODO add your handling code here:
+        visibleConfirmChanges();
+
+        changeColorBGOnBasedLinkState(LinkField.getText());
+    }// GEN-LAST:event_LinkFieldKeyTyped
+
+    private void ChapterSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_ChapterSpinnerStateChanged
+        // TODO add your handling code here:
+        visibleConfirmChanges();
+    }// GEN-LAST:event_ChapterSpinnerStateChanged
+
+    private void SeasonSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_SeasonSpinnerStateChanged
+        // TODO add your handling code here:
+        visibleConfirmChanges();
+    }// GEN-LAST:event_SeasonSpinnerStateChanged
+
+    private void StateComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_StateComboBoxItemStateChanged
+        // TODO add your handling code here:
+        visibleConfirmChanges();
+    }// GEN-LAST:event_StateComboBoxItemStateChanged
+
+    private void setPropertiesOfSerieInInputs() {
+        this.TitleField.setText(this.serie.title);
+        this.LinkField.setText(this.serie.link);
+        this.ChapterSpinner.setValue(this.serie.chapter);
+        this.SeasonSpinner.setValue(this.serie.season);
+        this.StateComboBox.setSelectedIndex(this.serie.state.value);
+
+        changeColorBGOnBasedLinkState(this.serie.link);
+    }
+
+    public void changeColorBGOnBasedLinkState(String link) {
+        executor.execute(() -> {
+            int responseCode = -1;
+            try {
+                responseCode = getLinkResponseCode(link);
+                setBackgroundBasedOnResponseCode(responseCode);
+            } catch (Exception err) {
+                System.err.println(err);
+                err.printStackTrace();
+            } finally {
+                revalidate();
+                repaint();
+            }
+        });
+    }
+
+    private int getLinkResponseCode(String link) {
+        try {
+            URL url = new URL(link);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            return connection.getResponseCode();
+        } catch (IOException err) {
+            return 0;
+        }
+    }
+    
+    private void setBackgroundBasedOnResponseCode(int responseCode) {
+        if (responseCode == 200) {
+            setBackground(Color.green.darker());
+            ContainerPanel.setBackground(Color.green.darker());
+        } else if (responseCode < 500 && responseCode >= 400) {
+            setBackground(Color.red.darker());
+            ContainerPanel.setBackground(Color.red.darker());
+        } else if (responseCode == 0) {
+            setBackground(Color.yellow);
+            ContainerPanel.setBackground(Color.yellow);
+        } else {
+            ContainerPanel.setBackground(Color.gray.darker());
+        }
+    }
+
+    private void visibleConfirmChanges() {
+        if (!ConfirmChangesPanel.isVisible()) {
+            ConfirmChangesPanel.setVisible(true);
+            revalidate();
+            repaint();
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AcceptChanges;
     private javax.swing.JSpinner ChapterSpinner;
+    private javax.swing.JPanel ConfirmChangesPanel;
+    private javax.swing.JPanel ContainerPanel;
+    private javax.swing.JButton DiscardChanges;
     private javax.swing.JTextField LinkField;
     private javax.swing.JSpinner SeasonSpinner;
     private javax.swing.JComboBox<String> StateComboBox;
     private javax.swing.JTextField TitleField;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel16;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     // End of variables declaration//GEN-END:variables
 
 }

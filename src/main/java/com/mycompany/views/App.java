@@ -8,11 +8,6 @@ import com.mycompany.models.SerieManager;
 import com.mycompany.views.components.SerieItem;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.net.URL;
-import java.net.HttpURLConnection;
-import java.awt.Color;
 
 /**
  *
@@ -26,7 +21,7 @@ public class App extends javax.swing.JFrame {
      * Creates new form App
      */
     public App() {
-        // FIXME: no funcioa bien el scroll y no muestra todos los componentes
+        //TODO: la SearchBox hacerla un componente
         managerSerie = new SerieManager("series.db");
         ArrayList<SerieItem> serieListComponents = new ArrayList<SerieItem>();
 
@@ -35,35 +30,12 @@ public class App extends javax.swing.JFrame {
         for (var serie : managerSerie.getSeries()) {
             SerieItem serieItem = new SerieItem(serie);
 
-            jPanel2.add(serieItem);
+            jPanel1.add(serieItem);
             serieListComponents.add(serieItem);
         }
-        
-        //FIXME: refactor
-        ExecutorService executorService = Executors.newFixedThreadPool(serieListComponents.size());
 
-        for (var component : serieListComponents) {
-            executorService.submit(() -> {
-                try {
-                    var url = new URL(component.serie.link);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("HEAD");
-
-                    int responseCode = connection.getResponseCode();
-
-                    component.setBackground((responseCode == 200) ? Color.green.darker() : Color.red.darker());
-                    System.out.println("good finally");
-                } catch (Exception err) {
-                    System.err.println(err);
-                    err.printStackTrace();
-                    component.setBackground(Color.yellow);
-                }
-                System.out.println("Realizando solicitud HTTP desde hilo: " + Thread.currentThread().getName());
-            });
-        }
-
-        jPanel2.revalidate();
-        jPanel2.repaint();
+        jPanel1.revalidate();
+        jPanel1.repaint();
     }
 
     /**
@@ -77,13 +49,13 @@ public class App extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
         Header = new javax.swing.JPanel();
         ButtonOptions = new javax.swing.JButton();
         ButtonRefreshAvailabilitySerie = new javax.swing.JButton();
         SearchBox = new javax.swing.JTextField();
         ButtonAddSerie = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MySeries App");
@@ -92,18 +64,6 @@ public class App extends javax.swing.JFrame {
         jSplitPane1.setDividerLocation(60);
         jSplitPane1.setDividerSize(2);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-
-        jScrollPane1.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(0, 0));
-        jScrollPane1.setViewportView(jPanel2);
-
-        jPanel2.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
-        jPanel2.setMinimumSize(new java.awt.Dimension(0, 0));
-        jPanel2.setPreferredSize(new java.awt.Dimension(700, 700));
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
-        jScrollPane1.setViewportView(jPanel2);
-
-        jSplitPane1.setBottomComponent(jScrollPane1);
 
         ButtonOptions.setText("⚙");
 
@@ -156,32 +116,35 @@ public class App extends javax.swing.JFrame {
 
         jSplitPane1.setLeftComponent(Header);
 
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane2.setViewportView(jPanel1);
+
+        jSplitPane1.setRightComponent(jScrollPane2);
+
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void ButtonRefreshAvailabilitySerieActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ButtonRefreshAvailabilitySerieActionPerformed
-        // TODO add your handling code here:
-        jPanel2.removeAll();
+        jPanel1.removeAll();
 
         for (var serie : managerSerie.getSeries()) {
-            jPanel2.add(new SerieItem(serie));
+            jPanel1.add(new SerieItem(serie));
         }
 
-        jPanel2.revalidate();
-        jPanel2.repaint();
+        jPanel1.revalidate();
+        jPanel1.repaint();
 
     }// GEN-LAST:event_ButtonRefreshAvailabilitySerieActionPerformed
 
     private void ButtonAddSerieActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ButtonAddSerieActionPerformed
-        // TODO add your handling code here:
-        jPanel2.add(new SerieItem(managerSerie.addSerie()));
+        jPanel1.add(new SerieItem(managerSerie.addSerie()));
 
-        jPanel2.revalidate();
-        jPanel2.repaint();
+        jPanel1.revalidate();
+        jPanel1.repaint();
     }// GEN-LAST:event_ButtonAddSerieActionPerformed
-
+    
     /**
      * @param args the command line arguments
      */
@@ -227,8 +190,8 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JButton ButtonRefreshAvailabilitySerie;
     private javax.swing.JPanel Header;
     private javax.swing.JTextField SearchBox;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 }
