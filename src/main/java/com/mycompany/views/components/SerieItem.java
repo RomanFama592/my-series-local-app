@@ -19,9 +19,9 @@ import com.mycompany.models.SerieStates;
  * @author famar
  */
 public class SerieItem extends javax.swing.JPanel {
-    //FIXME: arreglar el como muestro el estado del link
-    
-    //TODO: añadir el uso del template para el link
+    // FIXME: arreglar el como muestro el estado del link
+
+    // TODO: añadir el uso del template para el link
     public final SerieElement serie;
     private ExecutorService executor;
 
@@ -45,10 +45,12 @@ public class SerieItem extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         ContainerPanel = new javax.swing.JPanel();
+        selectedDelete = new javax.swing.JCheckBox();
         jPanel6 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         TitleField = new javax.swing.JTextField();
@@ -73,12 +75,17 @@ public class SerieItem extends javax.swing.JPanel {
         setBackground(getBackground());
         setFocusCycleRoot(true);
         setFocusTraversalPolicyProvider(true);
-        setMaximumSize(new java.awt.Dimension(800, 100));
+        setMaximumSize(new java.awt.Dimension(500, 100));
         setMinimumSize(new java.awt.Dimension(500, 100));
         setLayout(new java.awt.CardLayout());
 
         ContainerPanel.setBackground(getBackground());
+        ContainerPanel.setMaximumSize(new java.awt.Dimension(500, 100));
         ContainerPanel.setLayout(new javax.swing.BoxLayout(ContainerPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        selectedDelete.setMargin(new java.awt.Insets(2, 50, 2, 50));
+        selectedDelete.setVisible(false);
+        ContainerPanel.add(selectedDelete);
 
         jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.Y_AXIS));
 
@@ -103,7 +110,7 @@ public class SerieItem extends javax.swing.JPanel {
         jLabel9.setText("Link");
         jPanel7.add(jLabel9);
 
-        LinkField.setMaximumSize(new java.awt.Dimension(300, 50));
+        LinkField.setMaximumSize(new java.awt.Dimension(200, 50));
         LinkField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 LinkFieldKeyTyped(evt);
@@ -192,7 +199,7 @@ public class SerieItem extends javax.swing.JPanel {
         add(ContainerPanel, "card3");
     }// </editor-fold>//GEN-END:initComponents
 
-    private void AcceptChangesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AcceptChangesMouseClicked
+    private void AcceptChangesMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_AcceptChangesMouseClicked
         // TODO add your handling code here:
         this.serie.title = TitleField.getText();
         this.serie.link = LinkField.getText();
@@ -204,13 +211,18 @@ public class SerieItem extends javax.swing.JPanel {
         this.serie.save();
 
         ConfirmChangesPanel.setVisible(false);
-    }//GEN-LAST:event_AcceptChangesMouseClicked
+    }// GEN-LAST:event_AcceptChangesMouseClicked
 
-    private void DiscardChangesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DiscardChangesMouseClicked
+    private void DiscardChangesMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_DiscardChangesMouseClicked
         // TODO add your handling code here:
         setPropertiesOfSerieInInputs();
         ConfirmChangesPanel.setVisible(false);
-    }//GEN-LAST:event_DiscardChangesMouseClicked
+    }// GEN-LAST:event_DiscardChangesMouseClicked
+
+    private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_deleteButtonMouseClicked
+        // TODO add your handling code here:
+
+    }// GEN-LAST:event_deleteButtonMouseClicked
 
     private void TitleFieldKeyTyped(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TitleFieldKeyTyped
         // TODO add your handling code here:
@@ -275,7 +287,7 @@ public class SerieItem extends javax.swing.JPanel {
             return 0;
         }
     }
-    
+
     private void setBackgroundBasedOnResponseCode(int responseCode) {
         if (responseCode == 200) {
             setBackground(Color.green.darker());
@@ -321,6 +333,7 @@ public class SerieItem extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    public javax.swing.JCheckBox selectedDelete;
     // End of variables declaration//GEN-END:variables
 
 }

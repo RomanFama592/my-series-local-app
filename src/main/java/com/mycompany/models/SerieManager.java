@@ -95,6 +95,19 @@ public class SerieManager {
         }
     }
 
+    public boolean deleteSerie(SerieElement serie) {
+        try {
+            int index = serieList.indexOf(serie);
+            serieList.remove(index);
+            serie.delete();
+            return true;
+        } catch (Exception err) {
+            System.err.println(err);
+            err.printStackTrace();
+            return false;
+        }
+    }
+
     private void loadSeries() {
         try (var query = database.new Query("SELECT * FROM " + tableName)) {
             var rs = query.executeQuery();

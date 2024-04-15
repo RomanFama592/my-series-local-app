@@ -4,10 +4,13 @@
  */
 package com.mycompany.views;
 
+import com.mycompany.models.SerieElement;
 import com.mycompany.models.SerieManager;
 import com.mycompany.views.components.SerieItem;
 
 import java.util.ArrayList;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 /**
  *
@@ -16,22 +19,24 @@ import java.util.ArrayList;
 public class App extends javax.swing.JFrame {
 
     final SerieManager managerSerie;
+    final ArrayList<SerieItem> serieListComponents;
+    private boolean deleting = false;
 
     /**
      * Creates new form App
      */
     public App() {
-        //TODO: la SearchBox hacerla un componente
+        // TODO: la SearchBox hacerla un componente
         managerSerie = new SerieManager("series.db");
-        ArrayList<SerieItem> serieListComponents = new ArrayList<SerieItem>();
+        serieListComponents = new ArrayList<SerieItem>();
 
         initComponents();
 
-        for (var serie : managerSerie.getSeries()) {
+        for (SerieElement serie : managerSerie.getSeries()) {
             SerieItem serieItem = new SerieItem(serie);
 
-            jPanel1.add(serieItem);
-            serieListComponents.add(serieItem);
+            jPanel1.add(serieItem, 0);
+            serieListComponents.add(0, serieItem);
         }
 
         jPanel1.revalidate();
@@ -45,7 +50,8 @@ public class App extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
@@ -54,6 +60,8 @@ public class App extends javax.swing.JFrame {
         ButtonRefreshAvailabilitySerie = new javax.swing.JButton();
         SearchBox = new javax.swing.JTextField();
         ButtonAddSerie = new javax.swing.JButton();
+        ButtonDelete = new javax.swing.JButton();
+        ButtonCancelDelete = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
 
@@ -84,32 +92,50 @@ public class App extends javax.swing.JFrame {
             }
         });
 
+        ButtonDelete.setText("🗑");
+        ButtonDelete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ButtonDeleteMouseClicked(evt);
+            }
+        });
+
+        ButtonCancelDelete.setText("✖");
+        ButtonCancelDelete.setVisible(false);
+
         javax.swing.GroupLayout HeaderLayout = new javax.swing.GroupLayout(Header);
         Header.setLayout(HeaderLayout);
         HeaderLayout.setHorizontalGroup(
-            HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(HeaderLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(ButtonRefreshAvailabilitySerie)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ButtonAddSerie)
-                .addGap(61, 61, 61)
-                .addComponent(SearchBox, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                .addGap(89, 89, 89)
-                .addComponent(ButtonOptions)
-                .addGap(14, 14, 14))
-        );
+                HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(HeaderLayout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(ButtonRefreshAvailabilitySerie)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ButtonAddSerie)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 43,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ButtonCancelDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 30,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(SearchBox, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(ButtonOptions)
+                                .addGap(14, 14, 14)));
         HeaderLayout.setVerticalGroup(
-            HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, HeaderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(ButtonRefreshAvailabilitySerie)
-                    .addComponent(ButtonAddSerie)
-                    .addComponent(SearchBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ButtonOptions))
-                .addGap(14, 14, 14))
-        );
+                HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, HeaderLayout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                        .addComponent(ButtonRefreshAvailabilitySerie)
+                                        .addComponent(ButtonAddSerie)
+                                        .addComponent(SearchBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ButtonOptions)
+                                        .addComponent(ButtonDelete)
+                                        .addComponent(ButtonCancelDelete))
+                                .addGap(14, 14, 14)));
 
         SearchBox.getAccessibleContext().setAccessibleName("SearchBox");
         SearchBox.getAccessibleContext().setAccessibleDescription("");
@@ -126,11 +152,44 @@ public class App extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void ButtonDeleteMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_ButtonDeleteMouseClicked
+        if (deleting) {
+            
+            var it = serieListComponents.iterator();
+            
+            while (it.hasNext()) {
+                SerieItem currentSerie = it.next();
+                if (currentSerie.selectedDelete.isSelected()) {
+                    if (managerSerie.deleteSerie(currentSerie.serie)) {
+                        it.remove();
+                        jPanel1.remove(currentSerie);
+                    }
+
+                }
+                currentSerie.selectedDelete.setVisible(false);
+
+            }
+
+            deleting = false;
+        } else {
+            for (SerieItem serie : serieListComponents) {
+                serie.selectedDelete.setVisible(true);
+            }
+            deleting = true;
+        }
+        
+        
+
+        jPanel1.revalidate();
+        jPanel1.repaint();
+
+    }// GEN-LAST:event_ButtonDeleteMouseClicked
+
     private void ButtonRefreshAvailabilitySerieActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ButtonRefreshAvailabilitySerieActionPerformed
         jPanel1.removeAll();
 
         for (var serie : managerSerie.getSeries()) {
-            jPanel1.add(new SerieItem(serie));
+            jPanel1.add(new SerieItem(serie), 0);
         }
 
         jPanel1.revalidate();
@@ -139,12 +198,12 @@ public class App extends javax.swing.JFrame {
     }// GEN-LAST:event_ButtonRefreshAvailabilitySerieActionPerformed
 
     private void ButtonAddSerieActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ButtonAddSerieActionPerformed
-        jPanel1.add(new SerieItem(managerSerie.addSerie()));
+        jPanel1.add(new SerieItem(managerSerie.addSerie()), 0);
 
         jPanel1.revalidate();
         jPanel1.repaint();
     }// GEN-LAST:event_ButtonAddSerieActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
@@ -186,6 +245,8 @@ public class App extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonAddSerie;
+    private javax.swing.JButton ButtonCancelDelete;
+    private javax.swing.JButton ButtonDelete;
     private javax.swing.JButton ButtonOptions;
     private javax.swing.JButton ButtonRefreshAvailabilitySerie;
     private javax.swing.JPanel Header;
